@@ -1,0 +1,9 @@
+.button-container {
+    margin: 20px;
+    width: 100%;
+
+    /* Centers button in div */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
