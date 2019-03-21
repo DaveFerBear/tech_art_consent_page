@@ -8,6 +8,11 @@ function changePage(page) {
             document.getElementById("page-" + i).style.display = "none";
         }
     }
+    if (page == 3) {
+        setTimeout(function () {
+            changePage(1);
+        }, 3000);
+    }
 }
 
 $(document).ready(function () {
