@@ -1,14 +1,15 @@
 // Toggle between pages
 function changePage(page) {
     for (var i = 1; i <= 3; i++) {
-        console.log("page-" + i);
         if (i == page) {
             document.getElementById("page-" + i).style.display = "block";
         } else {
             document.getElementById("page-" + i).style.display = "none";
         }
     }
+    // Redirect home if at last page.
     if (page == 3) {
+        document.getElementById("welcome-text").innerHTML = "Welcome User " + Math.floor(Math.random() * 1000);
         setTimeout(function () {
             changePage(1);
         }, 3000);
