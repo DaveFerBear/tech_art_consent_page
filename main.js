@@ -17,6 +17,9 @@ function changePage(page) {
 }
 
 $(document).ready(function () {
+    // Hide Scrollbars (no overflow)
+    $("body").css("overflow", "hidden");
+
     document.getElementById("page-1-button").addEventListener("click", function () {
         changePage(2);
     });
