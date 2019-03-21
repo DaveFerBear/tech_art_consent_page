@@ -1,5 +1,25 @@
-// Probably some javascript should go here.
+// Toggle between pages
+function changePage(page) {
+    for (var i = 1; i <= 3; i++) {
+        console.log("page-" + i);
+        if (i == page) {
+            document.getElementById("page-" + i).style.display = "block";
+        } else {
+            document.getElementById("page-" + i).style.display = "none";
+        }
+    }
+}
+
 $(document).ready(function () {
+    document.getElementById("page-1-button").addEventListener("click", function () {
+        changePage(2);
+    });
+
+    document.getElementById("page-2-button").addEventListener("click", function () {
+        changePage(3);
+    });
+
+
     var video = document.querySelector("#videoElement");
 
     if (navigator.mediaDevices.getUserMedia) {

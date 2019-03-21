@@ -8,11 +8,18 @@
     justify-content: center;
 }
 
-#container {
+.icon {
+    max-width: 200px;
+    max-height: 200px;
+}
+
+#video-container {
     margin: 0px auto;
     width: 500px;
     height: 375px;
     border: 10px #333 solid;
+
+    display: none;
 }
 #videoElement {
     width: 500px;

@@ -60,6 +60,8 @@
     document.getElementById('btn-stop-recording').onclick = function () {
         this.disabled = true;
         recorder.stopRecording(stopRecordingCallback);
+        console.log("Stop Recording");
+        console.log(recorder.getBlob());
     };
 </script>
 

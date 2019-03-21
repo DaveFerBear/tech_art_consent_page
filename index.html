@@ -16,7 +16,18 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" id="page-1">
+        <div class="row justify-content-center">
+            <img src="icon.png" class="icon">
+        </div>
+        <div class="row justify-content-center">
+            <div class="col col-4 button-container">
+                <button id="page-1-button">Enter</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="page-2" style="display: none;">
         <div class="row justify-content-center">
             <h1>Title Text</h1>
         </div>
@@ -32,12 +43,19 @@
         </div>
         <div class="row justify-content-center">
             <div class="col col-4 button-container">
-                <button>Submit Consent</button>
+                <button id="page-2-button">Submit Consent</button>
             </div>
         </div>
-        <div class="row justify-content-center" id="container">
+        <div class="row justify-content-center" id="video-container">
             <video autoplay="true" id="videoElement"></video>
         </div>
+    </div>
+
+    <div class="container" id="page-3" style="display: none;">
+        <div class="row justify-content-center">
+            <h3>Welcome User 003.</h3>
+        </div>
+    </div>
     </div>
 </body>
 
