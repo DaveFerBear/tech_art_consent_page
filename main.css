@@ -1,3 +1,5 @@
+@import "compass/css3";
+
 .button-container {
     margin: 20px;
     width: 100%;
@@ -11,6 +13,14 @@
 .icon {
     max-width: 200px;
     max-height: 200px;
+
+    top: 100px;
+  
+    font: italic bold 5em/1 Bodoni, serif;
+    color: #555;
+    text-align: center;
+    
+    animation: fadeIn 2s infinite alternate;
 }
 
 #video-container {
@@ -31,18 +41,8 @@ body {
     transform: rotate(180deg);
 }
 
-@import "compass/css3";
+
 
 @keyframes fadeIn { 
   from { opacity: 0.2; } 
-}
-
-.icon {
-  top: 100px;
-  
-  font: italic bold 5em/1 Bodoni, serif;
-  color: #555;
-  text-align: center;
-  
-  animation: fadeIn 2s infinite alternate;
 }
