@@ -1,18 +1,17 @@
 // Toggle between pages
 function changePage(page) {
     for (var i = 1; i <= 3; i++) {
-        if (i == page) {
-            document.getElementById("page-" + i).style.display = "block";
-        } else {
-            document.getElementById("page-" + i).style.display = "none";
-        }
+        var displayOption = i == page ? "block" : "none";
+        document.getElementById("page-" + i).style.display = displayOption;
     }
+
     // Redirect home if at last page.
+    var GO_HOME_TIME_DELAY_MS = 3000;
     if (page == 3) {
         document.getElementById("welcome-text").innerHTML = "Welcome User " + Math.floor(Math.random() * 1000);
         setTimeout(function () {
             changePage(1);
-        }, 3000);
+        }, GO_HOME_TIME_DELAY_MS);
     }
 }
 
