@@ -35,3 +35,7 @@
     -webkit-animation: bounce 1s infinite linear;
     animation: bounce 1s infinite linear;
 }
+
+body {
+    transform: rotate(180deg);
+}
