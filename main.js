@@ -8,7 +8,7 @@ function changePage(page) {
     // Redirect home if at last page.
     var GO_HOME_TIME_DELAY_MS = 3000;
     if (page == 3) {
-        document.getElementById("welcome-text").innerHTML = "Welcome User " + Math.floor(Math.random() * 1000);
+        document.getElementById("welcome-text").innerHTML = "User " + Math.floor(Math.random() * 1000);
         setTimeout(function () {
             changePage(1);
         }, GO_HOME_TIME_DELAY_MS);
