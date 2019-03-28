@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <button disabled>Download photo</button>
+    <button disabled id="download-button">Download photo</button>
     <video style="display: none;"></video>
 </body>
 
@@ -19,11 +19,11 @@
             return vid.play(); // returns a Promise
         })
         .then(() => { // enable the button
-            const btn = document.querySelector('button');
+            const btn = document.getElementById('download-button');
             btn.disabled = false;
             btn.onclick = e => {
                 takeASnap()
-                    .then(download);
+                    .then(process);
             };
         });
 
@@ -33,17 +33,47 @@
         canvas.width = vid.videoWidth; // set its size to the one of the video
         canvas.height = vid.videoHeight;
         ctx.drawImage(vid, 0, 0); // the video
+
+
         return new Promise((res, rej) => {
             canvas.toBlob(res, 'image/jpeg'); // request a Blob from the canvas
         });
+
     }
-    function download(blob) {
-        // uses the <a download> to download a Blob
-        let a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'screenshot.jpg';
-        document.body.appendChild(a);
-        a.click();
+
+    function formatParams(params) {
+        return "?" + Object
+            .keys(params)
+            .map(function (key) {
+                return key + "=" + encodeURIComponent(params[key])
+            })
+            .join("&")
+    }
+
+    function process(blob) {
+        console.log(blob);
+
+        // Upload to cloud storage
+        var endpoint = "https://www.googleapis.com/upload/storage/v1/b/gene499-bucket-v2/o";
+        var params = {
+            name: "test-js-upload-1",
+            uploadType: "media"
+        }
+        var url = endpoint + formatParams(params)
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+
+        //Send the proper header information along with the request
+        // xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () { // Call a function when the state changes.
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                console.log("Request Successful.")
+            } else {
+                console.log("Request Failed?")
+            }
+        }
+        xhr.send(blob);
     }
 </script>
 
