@@ -98,7 +98,7 @@ p1 {
     height: 375px;
     border: 10px #333 solid;
 
-    display: none;
+    /* display: none;*/
 }
 #videoElement {
     width: 500px;
