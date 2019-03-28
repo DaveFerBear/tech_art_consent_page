@@ -6,12 +6,17 @@ function changePage(page) {
     }
 
     // Redirect home if at last page.
-    var GO_HOME_TIME_DELAY_MS = 3000;
-    if (page == 3) {
+    var PAGE_3_TIME_DELAY_MS = 5000;
+    var PAGE_2_TIME_DELAY_MS = 10000;
+    if (page == 2) {
+        setTimeout(function () {
+            changePage(1);
+        }, PAGE_2_TIME_DELAY_MS);
+    } else if (page == 3) {
         document.getElementById("welcome-text").innerHTML = "User " + Math.floor(Math.random() * 1000);
         setTimeout(function () {
             changePage(1);
-        }, GO_HOME_TIME_DELAY_MS);
+        }, PAGE_3_TIME_DELAY_MS);
     }
 }
 
