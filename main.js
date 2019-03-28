@@ -20,6 +20,15 @@ function changePage(page) {
     }
 }
 
+function animateEye(i) {
+    EYE_FLICKER_MS = 3000;
+    document.getElementById("eye").src = "img/eye-v2-" + i + ".png";
+    console.log(i);
+    setTimeout(function () {
+        animateEye((i) % 4 + 1);
+    }, EYE_FLICKER_MS);
+}
+
 function videoSetup() {
     let shouldStop = false;
     let stopped = false;
@@ -69,6 +78,8 @@ $(document).ready(function () {
     document.getElementById("page-2-button").addEventListener("click", function () {
         changePage(3);
     });
+
+    animateEye(1);
 
     // videoSetup();
 

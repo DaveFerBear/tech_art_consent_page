@@ -14,8 +14,8 @@
 }
 
 .icon {
-    max-width: 200px;
-    max-height: 200px;
+    max-width: 400px;
+    max-height: 400px;
     top: 100px;
     font: italic bold 5em/1 Bodoni, serif;
     color: #555;
@@ -107,5 +107,5 @@ p1 {
 }
 
 @keyframes fadeIn { 
-  from { opacity: 0.2; } 
+  from { opacity: 0.8; } 
 }
