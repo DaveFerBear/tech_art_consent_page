@@ -26,4 +26,11 @@ def main():
 	process_image('not_consented.jpg', False)
 
 if __name__ == '__main__':
-	list_blobs_with_prefix(prefix="/test_files", delimiter=None)
+	# This will be triggered automatically (user id will be known on file upload).
+	user_id = 1522
+
+	did_consent = fetch_user_consent_preferences(user_id)
+
+	files = fetch_images_and_save(user_id)
+	for f in files:
+		process_image(f, True)
