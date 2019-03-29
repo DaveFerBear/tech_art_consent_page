@@ -12,6 +12,10 @@
 </body>
 
 <script>
+
+    var userId = 0000;
+    var imageId = 0;
+
     const vid = document.querySelector('video');
     navigator.mediaDevices.getUserMedia({ video: true }) // request cam
         .then(stream => {
@@ -22,18 +26,36 @@
             const btn = document.getElementById('download-button');
             btn.disabled = false;
             btn.onclick = e => {
-                takeASnap()
-                    .then(process);
+                imageId = 0;
+                userId = Math.floor(Math.random() * 10000);
+                recursiveDelay(kickOff, 5, 2000)
+
             };
         });
 
+    function kickOff() {
+        takeASnap().then(process);
+    }
+
+    function recursiveDelay(functionToCall, executionsNumber, timeoutInMilliseconds) {
+        if (executionsNumber) { //exit condition
+
+            functionToCall(); // external function execution
+
+            setTimeout(
+                () => {
+                    recursiveDelay(functionToCall, executionsNumber - 1, timeoutInMilliseconds); //recursive call
+                }, timeoutInMilliseconds);
+        }
+    }
+
     function takeASnap() {
+
         const canvas = document.createElement('canvas'); // create a canvas
         const ctx = canvas.getContext('2d'); // get its context
         canvas.width = vid.videoWidth; // set its size to the one of the video
         canvas.height = vid.videoHeight;
         ctx.drawImage(vid, 0, 0); // the video
-
 
         return new Promise((res, rej) => {
             canvas.toBlob(res, 'image/jpeg'); // request a Blob from the canvas
@@ -51,12 +73,19 @@
     }
 
     function process(blob) {
-        console.log(blob);
+        console.log(userId + "/" + imageId);
+        //console.log(blob);
+        imageId++;
+        if (imageId > 5) {
+            imageId = 1
+        };
+
+        var fileName = "test_files/" + userId + "/" + imageId;
 
         // Upload to cloud storage
         var endpoint = "https://www.googleapis.com/upload/storage/v1/b/gene499-bucket-v2/o";
         var params = {
-            name: "test-js-upload-1",
+            name: fileName,
             uploadType: "media"
         }
         var url = endpoint + formatParams(params)
@@ -69,11 +98,9 @@
         xhr.onreadystatechange = function () { // Call a function when the state changes.
             if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                 console.log("Request Successful.")
-            } else {
-                console.log("Request Failed?")
             }
         }
-        xhr.send(blob);
+        xhr.send(blob); // Send the blob!
     }
 </script>
 
