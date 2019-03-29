@@ -26,4 +26,4 @@ def main():
 	process_image('not_consented.jpg', False)
 
 if __name__ == '__main__':
-	fetch_manifest()
+	list_blobs_with_prefix(prefix="/test_files", delimiter=None)
