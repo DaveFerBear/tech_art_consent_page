@@ -120,16 +120,13 @@
                 uploadType: "media"
             }
             var manifestUrl = uploadEndpoint + formatParams(manifestParams)
-
             xhr.open("POST", manifestUrl, true);
-            console.log("UPLOADE URL: " + manifestUrl);
             xhr.onreadystatechange = function () { // Call a function when the state changes.
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     console.log("MANIFEST Request Successful.")
                 }
             }
             xhr.send(manifest); // Send the blob!
-
         }
     }
 </script>
