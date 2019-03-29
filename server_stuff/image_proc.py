@@ -1,4 +1,5 @@
 import cv2
+from gcp_utils import *
 
 raw_img_folder = 'raw/'
 processed_img_folder = 'processed/'
@@ -25,4 +26,4 @@ def main():
 	process_image('not_consented.jpg', False)
 
 if __name__ == '__main__':
-	main()
+	fetch_manifest()
