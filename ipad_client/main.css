@@ -108,3 +108,45 @@ p1 {
 @keyframes fadeIn { 
   from { opacity: 0.2; } 
 }
+
+
+/* Scrollbar */
+.scrollbar
+{
+    align-content: center;
+	float: left;
+	height: 300px;
+	width: 500px;
+	background: #F5F5F5;
+	overflow-y: scroll;
+    margin-bottom: 25px;
+    background-color: #6CA8C0;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.force-overflow
+{
+    min-height: 440px;
+}
+#style-1::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 12px;
+    background-color: #103442;
+    border-radius: 10px;
+}
+
+#style-1::-webkit-scrollbar
+{
+	width: 22px;
+    background-color: #103442;
+    border-radius: 10px;
+}
+
+#style-1::-webkit-scrollbar-thumb
+{
+	border-radius: 12px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #4F7A8C;
+}
