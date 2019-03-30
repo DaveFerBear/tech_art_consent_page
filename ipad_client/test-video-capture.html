@@ -16,6 +16,7 @@
     var userId = 0000;
     var imageId = 0;
 
+    var NUM_IMAGES = 5;
     const vid = document.querySelector('video');
     navigator.mediaDevices.getUserMedia({ video: true }) // request cam
         .then(stream => {
@@ -28,7 +29,7 @@
             btn.onclick = e => {
                 imageId = 0;
                 userId = Math.floor(Math.random() * 10000);
-                recursiveDelay(kickOff, 5, 1000)
+                recursiveDelay(kickOff, NUM_IMAGES, 1000)
 
             };
         });
@@ -63,7 +64,7 @@
     function uploadBlobToCloud(blob) {
         // Some logging and housekeeping.
         imageId++;
-        if (imageId > 5) {
+        if (imageId > NUM_IMAGES) {
             imageId = 1
         };
         console.log(userId + "/" + imageId);
@@ -85,10 +86,11 @@
             name: fileName,
             uploadType: "media"
         }
-        var url = uploadEndpoint + formatParams(params)
+        var url = uploadEndpoint + formatParams(params);
 
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", url, true);
+        var synchronousRequest = (imageId == NUM_IMAGES); // Only run final request synchronously.
+        xhr.open("POST", url, synchronousRequest);
 
         //Send the proper header information along with the request
         // xhr.setRequestHeader("Content-Type", "application/json");
@@ -99,10 +101,10 @@
         }
         xhr.send(blob); // Send the blob!
 
-        if (imageId == 5) {
+        if (imageId == NUM_IMAGES) {
             var xhr2 = new XMLHttpRequest();
             // Fetch mediaLink from metadata
-            var manifestEndpoint = "https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/manifest"
+            var manifestEndpoint = "https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/manifest.txt"
             xhr2.open("GET", manifestEndpoint, false); // False for synchronous request.
             xhr2.send(null);
             var mediaLink = JSON.parse(xhr2.responseText).mediaLink;
@@ -120,10 +122,9 @@
 
             console.log(manifest);
 
-
             // Upload appended manifest
             var manifestParams = {
-                name: "manifest",
+                name: "manifest.txt",
                 uploadType: "media"
             }
             var manifestUrl = uploadEndpoint + formatParams(manifestParams)

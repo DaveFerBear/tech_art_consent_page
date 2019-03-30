@@ -6,8 +6,8 @@ function changePage(page) {
     }
 
     // Redirect home if at last page.
-    var PAGE_3_TIME_DELAY_MS = 5000;
-    var PAGE_2_TIME_DELAY_MS = 10000;
+    var PAGE_3_TIME_DELAY_MS = 6000;
+    var PAGE_2_TIME_DELAY_MS = 60000;
     if (page == 2) {
         setTimeout(function () {
             changePage(1);
