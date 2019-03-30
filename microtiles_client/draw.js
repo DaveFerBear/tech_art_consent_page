@@ -23,7 +23,7 @@ var secondWords = [
     "Usernames...", "Photos...", "Purchase History...", "Friends List...", "Subscriptions...", "Credit Card Information..."];
 
 var scale = 1.25
-var imgWidth = 160 * scale;
+var imgWidth = 185 * scale;
 var imgHeight = 120 * scale;
 
 function drawText(ctx, userId) {
