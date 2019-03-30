@@ -4,7 +4,6 @@ import cv2
 
 BASE_URL = 'https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/'
 
-
 def fetch_blob_through_medialink(url):
     print("FETCHING BLOB: {}".format(url))
     r1 = requests.get(url=url)
@@ -75,7 +74,7 @@ def process_image(filename, did_consent):
             (x, y, w, h) = faces[0]
             cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), 4)
 
-        processed_fname = 'processed-'+filename
+    processed_fname = 'processed-'+filename
     cv2.imwrite(processed_fname, img)  # processed-raw-1234-1.jpeg
     return processed_fname
 
