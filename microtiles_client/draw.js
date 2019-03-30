@@ -1,6 +1,6 @@
 var userCount = 0;
 var userLocations = [
-    [5, 0],
+    // [5, 0],
     [4, 1], [5, 1],
     [3, 2], [4, 2], [5, 2],
     [1, 3], [2, 3], [3, 3], [4, 3],
@@ -25,6 +25,18 @@ var secondWords = [
 var scale = 1.25
 var imgWidth = 187 * scale;
 var imgHeight = 120 * scale;
+
+function drawIcon(ctx) {
+    var iconX = 5;
+    var iconY = 0;
+    var img = new Image();
+    img.onload = function () {
+        img.width = imgWidth;
+        img.height = imgHeight;
+        ctx.drawImage(img, iconX * imgWidth, iconY * imgHeight, imgWidth, imgHeight);
+    };
+    img.src = "img/corner_icon.png";
+}
 
 function drawText(ctx, userId) {
     ctx.font = "10px Arial";
@@ -104,6 +116,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
     document.addEventListener("keypress", handleKeypress, false);
 
     console.log('DOM fully loaded and parsed');
+
+    canvas = document.getElementById("myCanvas");
+    context = canvas.getContext("2d");
+    drawIcon(context);
 
     for (var i = 0; i < userLocations.length; i++) {
         userSentences.push("");
