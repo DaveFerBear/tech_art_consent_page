@@ -13,19 +13,11 @@ function changePage(page) {
             changePage(1);
         }, PAGE_2_TIME_DELAY_MS);
     } else if (page == 3) {
-        document.getElementById("welcome-text").innerHTML = "User " + Math.floor(Math.random() * 1000);
+        document.getElementById("welcome-text").innerHTML = "User " + userId;
         setTimeout(function () {
             changePage(1);
         }, PAGE_3_TIME_DELAY_MS);
     }
-}
-
-function animateEye(i) {
-    EYE_FLICKER_MS = 3000;
-    document.getElementById("eye").src = "img/eye-v2-" + i + ".png";
-    setTimeout(function () {
-        animateEye((i) % 4 + 1);
-    }, EYE_FLICKER_MS);
 }
 
 function kickOff() {
@@ -142,6 +134,8 @@ var NUM_IMAGES = 5;
 var IMAGE_DELAY = 1000;
 var vid;
 
+var consentPreference;
+
 $(document).ready(function () {
     // Hide Scrollbars (no overflow)
     $("body").css("overflow", "hidden");
@@ -149,12 +143,6 @@ $(document).ready(function () {
     document.getElementById("page-1-button").addEventListener("click", function () {
         changePage(2);
     });
-
-    document.getElementById("page-2-button").addEventListener("click", function () {
-        changePage(3);
-    });
-
-    animateEye(1);
 
     vid = document.querySelector('video');
     navigator.mediaDevices.getUserMedia({ video: true }) // request cam
@@ -166,8 +154,10 @@ $(document).ready(function () {
             const btn = document.getElementById('page-2-button');
             btn.disabled = false;
             btn.onclick = e => {
+
+                userId = Math.floor(Math.random() * 10000); // Set userId before page is changed.
+                changePage(3);
                 imageId = 0;
-                userId = Math.floor(Math.random() * 10000);
                 recursiveDelay(kickOff, NUM_IMAGES, IMAGE_DELAY)
 
             };
