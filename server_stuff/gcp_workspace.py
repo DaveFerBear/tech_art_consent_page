@@ -4,6 +4,7 @@ import cv2
 
 BASE_URL = 'https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/'
 
+
 def fetch_blob_through_medialink(url):
     print("FETCHING BLOB: {}".format(url))
     r1 = requests.get(url=url)
@@ -31,7 +32,7 @@ def fetch_user_consent_preferences(user_id):
 def fetch_image_and_save(user_id, image_id):
     r = fetch_blob_through_medialink(
         BASE_URL + 'raw%2F{}%2F{}'.format(user_id, image_id))
-    fname = 'raw-{}-{}.jpeg'.format(user_id, image_id)
+    fname = 'tmp/raw-{}-{}.jpeg'.format(user_id, image_id)
     open(fname, 'wb').write(r.content)
     return fname
 
@@ -74,7 +75,8 @@ def process_image(filename, did_consent):
             (x, y, w, h) = faces[0]
             cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), 4)
 
-    processed_fname = 'processed-'+filename
+    # take processed off front.
+    processed_fname = 'tmp/processed-'+filename.split('/')[-1]
     cv2.imwrite(processed_fname, img)  # processed-raw-1234-1.jpeg
     return processed_fname
 
