@@ -62,12 +62,12 @@
 
     function uploadBlobToCloud(blob) {
         // Some logging and housekeeping.
-        console.log(userId + "/" + imageId);
-        console.log(blob);
         imageId++;
         if (imageId > 5) {
             imageId = 1
         };
+        console.log(userId + "/" + imageId);
+        console.log(blob);
 
         // Upload to cloud storage.
         function formatParams(params) {
@@ -79,7 +79,7 @@
                 .join("&")
         }
 
-        var fileName = "test_files/" + userId + "/" + imageId;
+        var fileName = "raw/" + userId + "/" + imageId;
         var uploadEndpoint = "https://www.googleapis.com/upload/storage/v1/b/gene499-bucket-v2/o";
         var params = {
             name: fileName,
@@ -100,17 +100,24 @@
         xhr.send(blob); // Send the blob!
 
         if (imageId == 5) {
+            var xhr2 = new XMLHttpRequest();
             // Fetch mediaLink from metadata
             var manifestEndpoint = "https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/manifest"
-            xhr.open("GET", manifestEndpoint, false); // False for synchronous request.
-            xhr.send(null);
-            var mediaLink = JSON.parse(xhr.responseText).mediaLink;
+            xhr2.open("GET", manifestEndpoint, false); // False for synchronous request.
+            xhr2.send(null);
+            var mediaLink = JSON.parse(xhr2.responseText).mediaLink;
 
             // Fetch data from mediaLink
-            xhr.open("GET", mediaLink, false); // False for synchronous request.
-            xhr.send(null);
+            xhr2.open("GET", mediaLink, false); // False for synchronous request.
+            xhr2.send(null);
 
-            var manifest = xhr.responseText + "\n" + userId;
+            var manifest;
+            if (!xhr2.responseText) {
+                manifest = userId + ',1';
+            } else {
+                manifest = xhr2.responseText + "\n" + userId + ',1';
+            }
+
             console.log(manifest);
 
 
@@ -120,13 +127,13 @@
                 uploadType: "media"
             }
             var manifestUrl = uploadEndpoint + formatParams(manifestParams)
-            xhr.open("POST", manifestUrl, true);
-            xhr.onreadystatechange = function () { // Call a function when the state changes.
+            xhr2.open("POST", manifestUrl, true);
+            xhr2.onreadystatechange = function () { // Call a function when the state changes.
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     console.log("MANIFEST Request Successful.")
                 }
             }
-            xhr.send(manifest); // Send the blob!
+            xhr2.send(manifest); // Send the blob!
         }
     }
 </script>
