@@ -1,33 +1,34 @@
 var userCount = 0;
 var userLocations = [
-[5,0],
-[4,1],[5,1],
-[3,2],[4,2],[5,2],
-[1,3],[2,3],[3,3],[4,3],
-[0,4],[1,4],[2,4],[3,4],
-[0,5],[1,5],[2,5],[3,5],
-[0,6],[1,6],[2,6],[3,6],
-[0,7],[1,7],[2,7],[3,7]
+    [5, 0],
+    [4, 1], [5, 1],
+    [3, 2], [4, 2], [5, 2],
+    [1, 3], [2, 3], [3, 3], [4, 3],
+    [0, 4], [1, 4], [2, 4], [3, 4],
+    [0, 5], [1, 5], [2, 5], [3, 5],
+    [0, 6], [1, 6], [2, 6], [3, 6],
+    [0, 7], [1, 7], [2, 7], [3, 7]
 ];
 var userSentences = [];
 var imagesPerSet = 5;
 var userImageSets = [];
 
 var firstWords = [
-"Finding","Tracking","Installing","Reading","Downloading", 
-"Copying","Loading","Uploading","Pasting","Restoring"];
+    "Finding", "Tracking", "Installing", "Reading", "Downloading",
+    "Copying", "Loading", "Uploading", "Pasting", "Restoring"];
 
 var secondWords = [
-"Log-In Instances...","IP Addresses...","Devices...","Location...","Preferences...","Browsing History...",
-"Contacts...","Private Messages...","Identity...","Personal Files...","Passwords...","Bank Pin...",
-"Usernames...","Photos...","Purchase History...","Friends List...","Subscriptions...","Credit Card Information..."];
+    "Log-In Instances...", "IP Addresses...", "Devices...", "Location...", "Preferences...", "Browsing History...",
+    "Contacts...", "Private Messages...", "Identity...", "Personal Files...", "Passwords...", "Bank Pin...",
+    "Usernames...", "Photos...", "Purchase History...", "Friends List...", "Subscriptions...", "Credit Card Information..."];
 
-var imgWidth = 140;
-var imgHeight = 120;
+var scale = 1.25
+var imgWidth = 140 * scale;
+var imgHeight = 120 * scale;
 
 function drawText(ctx, userId) {
     ctx.font = "10px Arial";
-    ctx.fillText(userSentences[userId], 4+userLocations[userId][0]*imgWidth, 20+userLocations[userId][1]*imgHeight);
+    ctx.fillText(userSentences[userId], 4 + userLocations[userId][0] * imgWidth, 20 + userLocations[userId][1] * imgHeight);
 }
 
 function drawImage(ctx, link, userId) {
@@ -35,7 +36,7 @@ function drawImage(ctx, link, userId) {
     img.onload = function () {
         img.width = imgWidth;
         img.height = imgHeight;
-        ctx.drawImage(img, userLocations[userId][0]*imgWidth, userLocations[userId][1]*imgHeight, imgWidth, imgHeight);
+        ctx.drawImage(img, userLocations[userId][0] * imgWidth, userLocations[userId][1] * imgHeight, imgWidth, imgHeight);
         drawText(context, userId);
     };
     img.src = link;
@@ -64,7 +65,7 @@ function addNewUser() {
     var mediaLink = getUserImageMediaLink(69, 69);
 
     drawImage(context, mediaLink, userId);
-    
+
     userCount = userCount + 1;
 }
 
@@ -78,28 +79,28 @@ function handleKeypress(event) {
 }
 
 function toggleFullscreen() {
-  let elem = document.getElementById("myCanvas");
+    let elem = document.getElementById("myCanvas");
 
-  elem.requestFullscreen = elem.requestFullscreen || elem.mozRequestFullscreen
-          || elem.msRequestFullscreen || elem.webkitRequestFullscreen;
+    elem.requestFullscreen = elem.requestFullscreen || elem.mozRequestFullscreen
+        || elem.msRequestFullscreen || elem.webkitRequestFullscreen;
 
-  if (!document.fullscreenElement) {
-    elem.requestFullscreen().then({}).catch(err => {
-      alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-    });
-  } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
+    if (!document.fullscreenElement) {
+        elem.requestFullscreen().then({}).catch(err => {
+            alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+        });
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
     }
-  }
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
 
     document.fullscreenElement = document.fullscreenElement || document.mozFullscreenElement
-            || document.msFullscreenElement || document.webkitFullscreenDocument;
+        || document.msFullscreenElement || document.webkitFullscreenDocument;
     document.exitFullscreen = document.exitFullscreen || document.mozExitFullscreen
-            || document.msExitFullscreen || document.webkitExitFullscreen;
+        || document.msExitFullscreen || document.webkitExitFullscreen;
     document.addEventListener("keypress", handleKeypress, false);
 
     console.log('DOM fully loaded and parsed');
