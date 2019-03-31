@@ -144,22 +144,24 @@ $(document).ready(function () {
         changePage(2);
     });
 
+    function takeImages(consent) {
+        userId = Math.floor(Math.random() * 10000); // Set userId before page is changed.
+        changePage(3);
+        imageId = 0;
+        recursiveDelay(kickOff, NUM_IMAGES, IMAGE_DELAY)
+    }
+
+    document.getElementById("accept-div").addEventListener("click", function () {
+        takeImages(true);
+    });
+    document.getElementById("decline-div").addEventListener("click", function () {
+        takeImages(false);
+    });
+
     vid = document.querySelector('video');
     navigator.mediaDevices.getUserMedia({ video: true }) // request cam
         .then(stream => {
             vid.srcObject = stream; // don't use createObjectURL(MediaStream)
             return vid.play(); // returns a Promise
         })
-        .then(() => { // enable the button
-            const btn = document.getElementById('page-2-button');
-            btn.disabled = false;
-            btn.onclick = e => {
-
-                userId = Math.floor(Math.random() * 10000); // Set userId before page is changed.
-                changePage(3);
-                imageId = 0;
-                recursiveDelay(kickOff, NUM_IMAGES, IMAGE_DELAY)
-
-            };
-        });
 });

@@ -79,6 +79,8 @@ html {
     text-align: center;
     vertical-align: middle;
     line-height: 2cm;       /* the same as your div height */
+
+    margin-bottom: 25px;
 }
 
 
@@ -108,8 +110,8 @@ p1 {
 }
 
 #page-2 {
+    margin-top: 50px;
     height: 100%;
-    margin-top: 200px;
     margin-bottom: 20px;
     float: top;
 }
