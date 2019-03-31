@@ -46,8 +46,43 @@ html {
 }
 
 .my-container {
+    height: 100%;
     background-color: #4F7A8C;
 }
+
+.terms {
+    margin-bottom: 60px;
+}
+
+.accept-decline-text {
+    text-align: center;
+    width: 100%;
+    color: #103442;
+    font-family: "Bungee";
+    font-size: 0.8cm;
+    margin-left: 25px;
+    margin-right: 20px;
+}
+
+.consent-button {
+    width: 2.5cm;
+    height: 2.5cm;
+    border-style: solid;
+    border-radius: 0.5cm;
+    border-color: #6CA8C0;
+    border-width: 0.25cm;
+
+    font-family: "Bungee";
+    color: #D9E8F4;
+    font-size: 1.8cm;
+
+    text-align: center;
+    vertical-align: middle;
+    line-height: 2cm;       /* the same as your div height */
+
+    margin-bottom: 25px;
+}
+
 
 p1, h1, h2 {
     text-align: center;
@@ -75,13 +110,14 @@ p1 {
 }
 
 #page-2 {
+    margin-top: 50px;
     height: 100%;
-    margin-top: 200px;
     margin-bottom: 20px;
     float: top;
 }
 
 #page-3 {
+    height: 100%;
     margin-top: 200px;
     margin-bottom: 20px;
 }
@@ -125,10 +161,6 @@ p1 {
     border-radius: 10px;
 }
 
-.force-overflow
-{
-    min-height: 440px;
-}
 #style-1::-webkit-scrollbar-track
 {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);

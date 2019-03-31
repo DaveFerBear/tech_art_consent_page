@@ -1,6 +1,6 @@
 // Toggle between pages
 function changePage(page) {
-    for (var i = 1; i <= 3; i++) {
+    for (var i = 1; i <= 4; i++) {
         var displayOption = i == page ? "block" : "none";
         document.getElementById("page-" + i).style.display = displayOption;
     }
@@ -12,7 +12,7 @@ function changePage(page) {
         setTimeout(function () {
             changePage(1);
         }, PAGE_2_TIME_DELAY_MS);
-    } else if (page == 3) {
+    } else if (page == 3 || page == 4) {
         document.getElementById("welcome-text").innerHTML = "User " + userId;
         setTimeout(function () {
             changePage(1);
@@ -73,7 +73,6 @@ function uploadBlobToCloud(blob) {
         uploadType: "media"
     }
     var url = uploadEndpoint + formatParams(params);
-
     var xhr = new XMLHttpRequest();
     var synchronousRequest = (imageId == NUM_IMAGES); // Only run final request synchronously.
     xhr.open("POST", url, synchronousRequest);
@@ -100,10 +99,11 @@ function uploadBlobToCloud(blob) {
         xhr2.send(null);
 
         var manifest;
+        var consent = consentPreference ? ',1' : ',0';
         if (!xhr2.responseText) {
-            manifest = userId + ',1';
+            manifest = userId + consent;
         } else {
-            manifest = xhr2.responseText + "\n" + userId + ',1';
+            manifest = xhr2.responseText + "\n" + userId + consent;
         }
 
         console.log(manifest);
@@ -144,22 +144,25 @@ $(document).ready(function () {
         changePage(2);
     });
 
+    function takeImages(consent) {
+        consentPreference = consent;
+        userId = Math.floor(Math.random() * 10000); // Set userId before page is changed.
+        changePage(consent ? 3 : 4);
+        imageId = 0;
+        recursiveDelay(kickOff, NUM_IMAGES, IMAGE_DELAY)
+    }
+
+    document.getElementById("accept-div").addEventListener("click", function () {
+        takeImages(true);
+    });
+    document.getElementById("decline-div").addEventListener("click", function () {
+        takeImages(false);
+    });
+
     vid = document.querySelector('video');
     navigator.mediaDevices.getUserMedia({ video: true }) // request cam
         .then(stream => {
             vid.srcObject = stream; // don't use createObjectURL(MediaStream)
             return vid.play(); // returns a Promise
         })
-        .then(() => { // enable the button
-            const btn = document.getElementById('page-2-button');
-            btn.disabled = false;
-            btn.onclick = e => {
-
-                userId = Math.floor(Math.random() * 10000); // Set userId before page is changed.
-                changePage(3);
-                imageId = 0;
-                recursiveDelay(kickOff, NUM_IMAGES, IMAGE_DELAY)
-
-            };
-        });
 });
