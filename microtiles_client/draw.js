@@ -1,3 +1,4 @@
+
 var userCount = 0;
 var userLocations = [
     // [5, 0],
@@ -38,24 +39,23 @@ function drawIcon(ctx) {
     img.src = "img/corner_icon.png";
 }
 
-function drawText(ctx, userId) {
+function drawText(ctx, userIndex) {
     ctx.font = "10px Arial";
-    ctx.fillText(userSentences[userId], 4 + userLocations[userId][0] * imgWidth, 20 + userLocations[userId][1] * imgHeight);
+    ctx.fillText(userSentences[userIndex], 4 + userLocations[userIndex][0] * imgWidth, 20 + userLocations[userIndex][1] * imgHeight);
 }
 
-function drawImage(ctx, link, userId) {
+function drawImage(ctx, link, userIndex) {
     var img = new Image();
     img.onload = function () {
         img.width = imgWidth;
         img.height = imgHeight;
-        ctx.drawImage(img, userLocations[userId][0] * imgWidth, userLocations[userId][1] * imgHeight, imgWidth, imgHeight);
-        drawText(context, userId);
+        ctx.drawImage(img, userLocations[userIndex][0] * imgWidth, userLocations[userIndex][1] * imgHeight, imgWidth, imgHeight);
+        drawText(context, userIndex);
     };
     img.src = link;
 }
 
-// ImageId is 1 through 5
-function getUserImageMediaLink(userId, imageId) {
+function getUserImageMediaLink(userIndex, imageId) {
     // TODO: add wherever the serverless functionw writes to.
     var endpoint = "https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/test_file_consent"
     var xhr = new XMLHttpRequest();
@@ -64,19 +64,45 @@ function getUserImageMediaLink(userId, imageId) {
     return JSON.parse(xhr.responseText).mediaLink;
 }
 
-function addNewUser() {
-    var userId = userCount % userLocations.length;
+function getManifest() {
+    var endpoint = "https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/manifest.txt"
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", endpoint, false); // False for synchronous request.
+    xhr.send(null);
+    var mediaLink = JSON.parse(xhr.responseText).mediaLink;
 
+    xhr.open("GET", mediaLink, false);
+    xhr.send(null);
+
+    return xhr.responseText;
+}
+
+function createNewUsersIfInManifest(manifest) {
+    var manifestArr = manifest.split('\n');
+    for (var i = 0; i < manifestArr.length; i++) {
+        var ud = manifestArr[i].split(',');
+        var userIdInt = parseInt(ud[0]);
+        if (!currentUsers.has(userIdInt)) { // New User encountered
+            var consentPref = parseInt(ud[1]) == 1;
+            console.log("Creating New User: " + userIdInt + ", " + consentPref);
+            var u = new User(userIdInt, consentPref);
+            currentUsers.set(userIdInt, u);
+        }
+    }
+}
+
+function addNewUser() {
+    var userIndex = userCount % userLocations.length;
     var firstWord = firstWords[Math.floor((Math.random() * firstWords.length))];
     var secondWord = secondWords[Math.floor((Math.random() * secondWords.length))];
-    userSentences[userId] = firstWord + " " + secondWord;
+    userSentences[userIndex] = firstWord + " " + secondWord;
 
     canvas = document.getElementById("myCanvas");
     context = canvas.getContext("2d");
 
     var mediaLink = getUserImageMediaLink(69, 69);
 
-    drawImage(context, mediaLink, userId);
+    drawImage(context, mediaLink, userIndex);
 
     userCount = userCount + 1;
 }
@@ -86,6 +112,8 @@ function handleKeypress(event) {
         toggleFullscreen();
     }
     else {
+        var manifestText = getManifest();
+        createNewUsersIfInManifest(manifestText);
         addNewUser();
     }
 }
@@ -106,6 +134,8 @@ function toggleFullscreen() {
         }
     }
 }
+
+var currentUsers = new Map();
 
 window.addEventListener('DOMContentLoaded', (event) => {
 
