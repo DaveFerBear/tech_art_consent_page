@@ -32,7 +32,7 @@ function takeImages() {
 function kickOff() {
     let uri = canvas.toDataURL('image/jpeg');
     context.drawImage(video, 0, 0, 640, 480);
-    uploadBlobToCloud(dataURItoBlob(uri));
+    //uploadBlobToCloud(dataURItoBlob(uri));
 }
 
 // Trigger photo take
