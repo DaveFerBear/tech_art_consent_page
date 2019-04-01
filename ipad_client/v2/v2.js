@@ -26,10 +26,6 @@ function takeImages() {
     console.log("clicked");
     userId = Math.floor(Math.random() * 10000); // Set userId before page is changed.
     imageId = 0;
-    recursiveDelay(kickOff, NUM_IMAGES, IMAGE_DELAY)
-}
-
-function kickOff() {
     let uri = canvas.toDataURL('image/jpeg');
     context.drawImage(video, 0, 0, 640, 480);
     //uploadBlobToCloud(dataURItoBlob(uri));
@@ -37,19 +33,9 @@ function kickOff() {
 
 // Trigger photo take
 document.getElementById("snap").addEventListener("click", function () {
-
+    setInterval(takeImages, 1000);
     takeImages();
 });
-
-function recursiveDelay(functionToCall, executionsNumber, timeoutInMilliseconds) {
-    if (executionsNumber) { //exit condition
-        functionToCall(); // external function execution
-        setTimeout(
-            () => {
-                recursiveDelay(functionToCall, executionsNumber - 1, timeoutInMilliseconds); //recursive call
-            }, timeoutInMilliseconds);
-    }
-}
 
 function dataURItoBlob(dataURI) {
     var byteString = atob(dataURI.split(',')[1]);
