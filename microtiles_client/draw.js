@@ -13,10 +13,10 @@ var userLocations = [
 var userSentences = [];
 var imagesPerSet = 5;
 var userImageSets = [];
-var lastDraw = [];
-var imageIdx = [];
+var drawPeriod = 475;
 
 var newUsers;
+var allUsers = [];
 
 var currentUsers = new Map();
 var images = [];
@@ -76,7 +76,7 @@ function drawImage(ctx, link, index) {
 // }
 
 function getManifest() {
-    var endpoint = "https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/manifest2.txt"
+    var endpoint = "https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/manifest.txt"
     var xhr = new XMLHttpRequest();
     xhr.open("GET", endpoint, false); // False for synchronous request.
     xhr.send(null);
@@ -111,6 +111,13 @@ function addNewUser(user) {
     var secondWord = secondWords[Math.floor((Math.random() * secondWords.length))];
     userSentences[userIndex] = firstWord + " " + secondWord;
 
+    if (allUsers.length < userLocations.length) {
+        allUsers.push(user);
+    }
+    else {
+        allUsers[userIndex] = user;
+    }
+
     canvas = document.getElementById("myCanvas");
     context = canvas.getContext("2d");
 
@@ -124,7 +131,25 @@ function userDrawLoop() {
     canvas = document.getElementById("myCanvas");
     context = canvas.getContext("2d");
 
+    var d = new Date();
+    var n = d.getTime();
 
+    for (var userIndex = 0; userIndex < allUsers.length; userIndex++) {
+
+        var user = allUsers[userIndex];
+
+        if (n - user.lastDraw > drawPeriod) {
+            // Update image displayed
+            user.imageIdx = (user.imageIdx+1)%user.mediaLinks.length;
+
+            drawImage(context, user.mediaLinks[user.imageIdx], userIndex);
+
+            user.lastDraw += drawPeriod;
+
+            d = new Date();
+            n = d.getTime();
+        }
+    }
 
 }
 
@@ -181,8 +206,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
     context = canvas.getContext("2d");
     drawIcon(context);
 
-    for (var i = 0; i < userLocations.length; i++) {
-        imageIdx.push(0);
-        // images.push(getImage(context, i));
-    }
+    setInterval(userDrawLoop, 100);
+
+    // var d = new Date();
+    // var n = d.getTime();
+
+    // for (var i = 0; i < userLocations.length; i++) {
+    //     imageIdx.push(0);
+    //     lastDraw.push(n);
+    //     // images.push(getImage(context, i));
+    // }
 });

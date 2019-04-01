@@ -2,6 +2,10 @@ function User(userId, didConsent) {
     this.userId = userId;
     this.consent = didConsent;
     this.mediaLinks = [];
+    this.imageIdx = 0;
+
+    var d = new Date();
+    this.lastDraw = d.getTime();
 
     var xhr1 = new XMLHttpRequest();
     var endpoint = "https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/processed%2f" + userId + "%2f1";
