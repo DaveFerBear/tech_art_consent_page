@@ -14,6 +14,7 @@ var userSentences = [];
 var imagesPerSet = 5;
 var userImageSets = [];
 var drawPeriod = 475;
+var iconIndex = -1;
 
 var newUsers;
 var allUsers = [];
@@ -34,14 +35,14 @@ var secondWords = [
 var imgWidth = 187 * 1.25;
 var imgHeight = 120 * 1.25;
 
-function drawIcon(ctx) {
+function drawIcon(ctx, location) {
     var iconX = 5;
     var iconY = 0;
     var img = new Image();
     img.onload = function () {
         img.width = imgWidth;
         img.height = imgHeight;
-        ctx.drawImage(img, iconX * imgWidth, iconY * imgHeight, imgWidth, imgHeight);
+        ctx.drawImage(img, location[0] * imgWidth, location[1] * imgHeight, imgWidth, imgHeight);
     };
     img.src = "img/corner_icon.png";
 }
@@ -142,7 +143,9 @@ function userDrawLoop() {
             // Update image displayed
             user.imageIdx = (user.imageIdx+1)%user.mediaLinks.length;
 
-            drawImage(context, user.mediaLinks[user.imageIdx], userIndex);
+            if (userIndex != iconIndex) {
+                drawImage(context, user.mediaLinks[user.imageIdx], userIndex);
+            }
 
             user.lastDraw += drawPeriod;
 
@@ -196,6 +199,14 @@ function toggleFullscreen() {
     }
 }
 
+function changeIconIndex() {
+    iconIndex = Math.floor((Math.random() * userLocations.length));
+
+    canvas = document.getElementById("myCanvas");
+    context = canvas.getContext("2d");
+    drawIcon(context, userLocations[iconIndex]);
+}
+
 window.addEventListener('DOMContentLoaded', (event) => {
 
     document.fullscreenElement = document.fullscreenElement || document.mozFullscreenElement
@@ -208,10 +219,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     canvas = document.getElementById("myCanvas");
     context = canvas.getContext("2d");
-    drawIcon(context);
+    drawIcon(context, [5, 0]);
 
-    setInterval(userDrawLoop, 100);
     setInterval(getNewUsers, 500);
+    setInterval(userDrawLoop, 100);
+    setInterval(changeIconIndex, 4000);
 
     // var d = new Date();
     // var n = d.getTime();
