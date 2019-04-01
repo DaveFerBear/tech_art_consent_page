@@ -13,7 +13,7 @@ var userLocations = [
 var userSentences = [];
 var imagesPerSet = 5;
 var userImageSets = [];
-var drawPeriod = 475;
+var drawPeriod = 900;
 var iconIndex = -1;
 
 var newUsers;
