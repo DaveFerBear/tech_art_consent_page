@@ -10,8 +10,8 @@ function changePage(page) {
     var PAGE_2_TIME_DELAY_MS = 60000;
     if (page == 2) {
         setTimeout(function () {
-            document.location.reload(true)
-            //changePage(1);
+            // document.location.reload(true)
+            changePage(1);
         }, PAGE_2_TIME_DELAY_MS);
     } else if (page == 3 || page == 4) {
         document.getElementById("welcome-text").innerHTML = "User " + userId;
@@ -20,14 +20,41 @@ function changePage(page) {
             var x = document.getElementById("style-1");
             x.scrollTop = 0;
 
-            document.location.reload(true);
-            //changePage(1);
+            // document.location.reload(true);
+            changePage(1);
         }, PAGE_3_TIME_DELAY_MS);
     }
 }
 
+function dataURItoBlob(dataURI) {
+    // convert base64 to raw binary data held in a string
+    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+    var byteString = atob(dataURI.split(',')[1]);
+
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+    // write the bytes of the string to an ArrayBuffer
+    var ab = new ArrayBuffer(byteString.length);
+
+    // create a view into the buffer
+    var ia = new Uint8Array(ab);
+
+    // set the bytes of the buffer to the correct values
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+
+    // write the ArrayBuffer to a blob, and you're done
+    var blob = new Blob([ab], { type: mimeString });
+    return blob;
+}
+
 function kickOff() {
-    takeASnap().then(uploadBlobToCloud);
+    context.drawImage(video, 0, 0, 640, 480);
+    var dataURI = canvas.toDataURL('image/jpeg');
+    var blob = dataURItoBlob(dataURI);
+    uploadBlobToCloud(blob);
 }
 
 function recursiveDelay(functionToCall, executionsNumber, timeoutInMilliseconds) {
@@ -38,19 +65,6 @@ function recursiveDelay(functionToCall, executionsNumber, timeoutInMilliseconds)
                 recursiveDelay(functionToCall, executionsNumber - 1, timeoutInMilliseconds); //recursive call
             }, timeoutInMilliseconds);
     }
-}
-
-function takeASnap() {
-    const canvas = document.createElement('canvas'); // create a canvas
-    const ctx = canvas.getContext('2d'); // get its context
-    canvas.width = vid.videoWidth; // set its size to the one of the video
-    canvas.height = vid.videoHeight;
-    ctx.drawImage(vid, 0, 0); // the video
-
-    return new Promise((res, rej) => {
-        canvas.toBlob(res, 'image/jpeg'); // request a Blob from the canvas
-    });
-
 }
 
 function uploadBlobToCloud(blob) {
@@ -138,7 +152,10 @@ var imageId = 0;
 
 var NUM_IMAGES = 5;
 var IMAGE_DELAY = 1000;
-var vid;
+
+var canvas;
+var context;
+var video;
 
 var consentPreference;
 
@@ -150,7 +167,12 @@ $(document).ready(function () {
         changePage(2);
     });
 
+    canvas = document.getElementById('canvas');
+    context = canvas.getContext('2d');
+    video = document.querySelector('video');
+
     function takeImages(consent) {
+        console.log("clicked");
         consentPreference = consent;
         userId = Math.floor(Math.random() * 10000); // Set userId before page is changed.
         changePage(consent ? 3 : 4);
@@ -165,10 +187,10 @@ $(document).ready(function () {
         takeImages(false);
     });
 
-    vid = document.querySelector('video');
+
     navigator.mediaDevices.getUserMedia({ video: true }) // request cam
         .then(stream => {
-            vid.srcObject = stream; // don't use createObjectURL(MediaStream)
-            return vid.play(); // returns a Promise
+            video.srcObject = stream; // don't use createObjectURL(MediaStream)
+            return video.play(); // returns a Promise
         })
 });
