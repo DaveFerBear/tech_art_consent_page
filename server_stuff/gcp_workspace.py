@@ -66,25 +66,25 @@ def process_image(filename, did_consent):
     else:
         faces = face_cascade.detectMultiScale(gray, 1.01, 2)
         faces = [face for face in faces if face[2] > min_face_width and face[3] > min_face_height]
-        print(faces)
+        # print(faces)
 
         if (len(faces) == 0):
             face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt.xml")
             faces = face_cascade.detectMultiScale(gray, 1.1, 1)
             faces = [face for face in faces if face[2] > min_face_width and face[3] > min_face_height]
-            print(faces)
+            # print(faces)
 
         if (len(faces) == 0):
             face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt2.xml")
             faces = face_cascade.detectMultiScale(gray, 1.1, 1)
             faces = [face for face in faces if face[2] > min_face_width and face[3] > min_face_height]
-            print(faces)
+            # print(faces)
 
         if (len(faces) == 0):
             face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt_tree.xml")
             faces = face_cascade.detectMultiScale(gray, 1.01, 2)
             faces = [face for face in faces if face[2] > min_face_width and face[3] > min_face_height]
-            print(faces)
+            # print(faces)
 
         if (len(faces) == 0):
             glasses_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_eye_tree_eyeglasses.xml")
@@ -115,17 +115,17 @@ def process_image(filename, did_consent):
         for i, face in enumerate(faces):
             (x, y, w, h) = face
             diff = x - (width - x - w)
-            print(diff)
+            # print(diff)
             if (abs(diff) < min_diff):
                 best_guy = i
                 min_diff = abs(diff)
 
         for i, face in enumerate(faces):
             (x, y, w, h) = face
-            color = 0
+            thiccness = 4
             if (i == best_guy):
-                color = 255
-            cv2.rectangle(img, (x, y), (x+w, y+h), (color, 0, 255), 4)
+                thiccness = 7
+            cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), thiccness)
             if (i == best_guy and 12*width < 14*height):
                 access_height = (14*height - 12*width) / 14
                 top_dist = y
@@ -163,6 +163,7 @@ def process(event, context):
     m = m.split('\n')
     last_user = m[-1]
     user_id, did_consent = last_user.split(',')
+    did_consent = int(did_consent)
 
     for image_id in range(1, NUM_IMAGES+1):
         raw_filename = fetch_image_and_save(user_id, image_id)
