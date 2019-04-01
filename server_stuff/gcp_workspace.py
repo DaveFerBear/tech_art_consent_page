@@ -35,7 +35,7 @@ def fetch_user_consent_preferences(user_id):
 def fetch_image_and_save(user_id, image_id):
     r = fetch_blob_through_medialink(
         BASE_URL + 'raw%2F{}%2F{}'.format(user_id, image_id))
-    fname = 'tmp/raw-{}-{}.jpeg'.format(user_id, image_id)
+    fname = '/tmp/raw-{}-{}.jpeg'.format(user_id, image_id)
     open(fname, 'wb').write(r.content)
     return fname
 
@@ -64,25 +64,25 @@ def process_image(filename, did_consent):
         img = cv2.resize(img, new_size, interpolation=cv2.INTER_LINEAR)
         img = cv2.resize(img, orig_size, interpolation=cv2.INTER_NEAREST)
     else:
-        faces = face_cascade.detectMultiScale(gray, 1.01, 2)
+        faces = face_cascade.detectMultiScale(gray, 1.1, 2)
         faces = [face for face in faces if face[2] > min_face_width and face[3] > min_face_height]
         # print(faces)
 
-        if (len(faces) == 0):
-            face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt.xml")
-            faces = face_cascade.detectMultiScale(gray, 1.1, 1)
-            faces = [face for face in faces if face[2] > min_face_width and face[3] > min_face_height]
-            # print(faces)
+        # if (len(faces) == 0):
+        #     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt.xml")
+        #     faces = face_cascade.detectMultiScale(gray, 1.1, 1)
+        #     faces = [face for face in faces if face[2] > min_face_width and face[3] > min_face_height]
+        #     # print(faces)
 
-        if (len(faces) == 0):
-            face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt2.xml")
-            faces = face_cascade.detectMultiScale(gray, 1.1, 1)
-            faces = [face for face in faces if face[2] > min_face_width and face[3] > min_face_height]
-            # print(faces)
+        # if (len(faces) == 0):
+        #     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt2.xml")
+        #     faces = face_cascade.detectMultiScale(gray, 1.1, 1)
+        #     faces = [face for face in faces if face[2] > min_face_width and face[3] > min_face_height]
+        #     # print(faces)
 
         if (len(faces) == 0):
             face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt_tree.xml")
-            faces = face_cascade.detectMultiScale(gray, 1.01, 2)
+            faces = face_cascade.detectMultiScale(gray, 1.1, 2)
             faces = [face for face in faces if face[2] > min_face_width and face[3] > min_face_height]
             # print(faces)
 
@@ -109,6 +109,9 @@ def process_image(filename, did_consent):
             if (12*width < 14*height):
                 access_height = (14*height - 12*width) / 14
                 img = img[int(access_height/2):int(-access_height/2), :]
+
+        if (len(faces) > 3):
+            faces = faces[:3]
 
         min_diff = 100000000
         best_guy = -1
@@ -138,7 +141,7 @@ def process_image(filename, did_consent):
                     img = img[int(access_height/2):int(-access_height/2), :]
 
     # take processed off front.
-    processed_fname = 'tmp/processed-'+filename.split('/')[-1]
+    processed_fname = '/tmp/processed-'+filename.split('/')[-1]
     cv2.imwrite(processed_fname, img)  # processed-raw-1234-1.jpeg
     return processed_fname
 
