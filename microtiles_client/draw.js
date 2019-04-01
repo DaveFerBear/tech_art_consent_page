@@ -162,16 +162,20 @@ function userDrawLoop() {
 //     curImage %= userLocations.length;
 // }
 
+function getNewUsers() {
+    var manifestText = getManifest();
+    var nu = createNewUsersIfInManifest(manifestText);
+    for (var i = 0; i < nu.length; i++) {
+        addNewUser(nu[i]);
+    }
+}
+
 function handleKeypress(event) {
     if (event.keyCode == '13') {
         toggleFullscreen();
     }
     else {
-        var manifestText = getManifest();
-        var nu = createNewUsersIfInManifest(manifestText);
-        for (var i = 0; i < nu.length; i++) {
-            addNewUser(nu[i]);
-        }
+        getNewUsers();
     }
 }
 
@@ -207,6 +211,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     drawIcon(context);
 
     setInterval(userDrawLoop, 100);
+    setInterval(getNewUsers, 500);
 
     // var d = new Date();
     // var n = d.getTime();
