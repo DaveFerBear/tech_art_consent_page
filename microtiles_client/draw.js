@@ -48,8 +48,17 @@ function drawIcon(ctx, location) {
 }
 
 function drawText(ctx, userIndex) {
-    ctx.font = "10px Arial";
-    ctx.fillText(userSentences[userIndex], 4 + userLocations[userIndex][0] * imgWidth, 20 + userLocations[userIndex][1] * imgHeight);
+    context.font      = "normal 10px monospace";
+    context.fillStyle = "#FFFFFF";
+    ctx.fillText(userSentences[userIndex], 7 + userLocations[userIndex][0] * imgWidth, imgHeight - 8 + userLocations[userIndex][1] * imgHeight);
+    var user = allUsers[userIndex];
+    context.font      = "14px Bungee";
+    var userText = "User "+user.userId;
+    if (!user.consent) {
+        userText = "User ????";
+    }
+    var textWidth = context.measureText(userText).width;
+    ctx.fillText("User "+user.userId, imgWidth/2 - textWidth/2 + userLocations[userIndex][0] * imgWidth, 20 + userLocations[userIndex][1] * imgHeight);
 }
 
 function drawImage(ctx, link, index) {
@@ -107,6 +116,7 @@ function createNewUsersIfInManifest(manifest) {
 }
 
 function addNewUser(user) {
+    console.log("Adding new user: "+(user.userId));
     var userIndex = userCount % userLocations.length;
     var firstWord = firstWords[Math.floor((Math.random() * firstWords.length))];
     var secondWord = secondWords[Math.floor((Math.random() * secondWords.length))];
