@@ -13,6 +13,14 @@ var userLocations = [
 var userSentences = [];
 var imagesPerSet = 5;
 var userImageSets = [];
+var lastDraw = [];
+var imageIdx = [];
+
+var newUsers;
+
+var currentUsers = new Map();
+var images = [];
+var curImage;
 
 var firstWords = [
     "Finding", "Tracking", "Installing", "Reading", "Downloading",
@@ -43,7 +51,7 @@ function drawText(ctx, userIndex) {
     ctx.fillText(userSentences[userIndex], 4 + userLocations[userIndex][0] * imgWidth, 20 + userLocations[userIndex][1] * imgHeight);
 }
 
-function getImage(ctx, index) {
+function drawImage(ctx, link, index) {
     var img = new Image();
     img.onload = function () {
         img.width = imgWidth;
@@ -54,20 +62,21 @@ function getImage(ctx, index) {
             imgHeight);
         drawText(context, index);
     };
+    img.src = link;
     return img;
 }
 
-function getUserImageMediaLink(userIndex, imageId) {
-    // TODO: add wherever the serverless functionw writes to.
-    var endpoint = "https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/test_file_consent"
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", endpoint, false); // False for synchronous request.
-    xhr.send(null);
-    return JSON.parse(xhr.responseText).mediaLink;
-}
+// function getUserImageMediaLink(userIndex, imageId) {
+//     // TODO: add wherever the serverless functionw writes to.
+//     var endpoint = "https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/test_file_consent"
+//     var xhr = new XMLHttpRequest();
+//     xhr.open("GET", endpoint, false); // False for synchronous request.
+//     xhr.send(null);
+//     return JSON.parse(xhr.responseText).mediaLink;
+// }
 
 function getManifest() {
-    var endpoint = "https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/manifest.txt"
+    var endpoint = "https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/manifest2.txt"
     var xhr = new XMLHttpRequest();
     xhr.open("GET", endpoint, false); // False for synchronous request.
     xhr.send(null);
@@ -78,8 +87,6 @@ function getManifest() {
 
     return xhr.responseText;
 }
-
-var newUsers;
 
 function createNewUsersIfInManifest(manifest) {
     newUsers = [];
@@ -98,7 +105,7 @@ function createNewUsersIfInManifest(manifest) {
     return newUsers;
 }
 
-function addNewUser() {
+function addNewUser(user) {
     var userIndex = userCount % userLocations.length;
     var firstWord = firstWords[Math.floor((Math.random() * firstWords.length))];
     var secondWord = secondWords[Math.floor((Math.random() * secondWords.length))];
@@ -107,21 +114,28 @@ function addNewUser() {
     canvas = document.getElementById("myCanvas");
     context = canvas.getContext("2d");
 
-    var mediaLink = getUserImageMediaLink(69, 69);
-
-    drawImage(context, mediaLink, userIndex);
+    drawImage(context, user.mediaLinks[0], userIndex);
 
     userCount = userCount + 1;
 }
 
-function drawUser(user) {
-    console.log("drawUser");
-    if (user.mediaLinks.length > 0) {
-        images[curImage].src = user.mediaLinks[0];
-    }
-    curImage++;
-    curImage %= userLocations.length;
+function userDrawLoop() {
+
+    canvas = document.getElementById("myCanvas");
+    context = canvas.getContext("2d");
+
+
+
 }
+
+// function drawUser(user) {
+//     console.log("drawUser");
+//     if (user.mediaLinks.length > 0) {
+//         images[curImage].src = user.mediaLinks[0];
+//     }
+//     curImage++;
+//     curImage %= userLocations.length;
+// }
 
 function handleKeypress(event) {
     if (event.keyCode == '13') {
@@ -131,7 +145,7 @@ function handleKeypress(event) {
         var manifestText = getManifest();
         var nu = createNewUsersIfInManifest(manifestText);
         for (var i = 0; i < nu.length; i++) {
-            drawUser(nu[i]);
+            addNewUser(nu[i]);
         }
     }
 }
@@ -153,10 +167,6 @@ function toggleFullscreen() {
     }
 }
 
-var currentUsers = new Map();
-var images = [];
-var curImage;
-
 window.addEventListener('DOMContentLoaded', (event) => {
 
     document.fullscreenElement = document.fullscreenElement || document.mozFullscreenElement
@@ -172,6 +182,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     drawIcon(context);
 
     for (var i = 0; i < userLocations.length; i++) {
-        images.push(getImage(context, i));
+        imageIdx.push(0);
+        // images.push(getImage(context, i));
     }
 });
