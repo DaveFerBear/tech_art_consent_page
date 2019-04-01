@@ -58,7 +58,7 @@ function drawText(ctx, userIndex) {
         userText = "User ????";
     }
     var textWidth = context.measureText(userText).width;
-    ctx.fillText("User "+user.userId, imgWidth/2 - textWidth/2 + userLocations[userIndex][0] * imgWidth, 20 + userLocations[userIndex][1] * imgHeight);
+    ctx.fillText(userText, imgWidth/2 - textWidth/2 + userLocations[userIndex][0] * imgWidth, 20 + userLocations[userIndex][1] * imgHeight);
 }
 
 function drawImage(ctx, link, index) {
