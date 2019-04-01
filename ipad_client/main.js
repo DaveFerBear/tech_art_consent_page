@@ -16,7 +16,7 @@ function changePage(page) {
     } else if (page == 3 || page == 4) {
         document.getElementById("welcome-text").innerHTML = "User " + userId;
         setTimeout(function () {
-            document.location.reload(true)
+            document.location.reload(true);
             //changePage(1);
         }, PAGE_3_TIME_DELAY_MS);
     }
