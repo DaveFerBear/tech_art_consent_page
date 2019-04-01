@@ -10,12 +10,14 @@ function changePage(page) {
     var PAGE_2_TIME_DELAY_MS = 60000;
     if (page == 2) {
         setTimeout(function () {
-            changePage(1);
+            document.location.reload(true)
+            //changePage(1);
         }, PAGE_2_TIME_DELAY_MS);
     } else if (page == 3 || page == 4) {
         document.getElementById("welcome-text").innerHTML = "User " + userId;
         setTimeout(function () {
-            changePage(1);
+            document.location.reload(true)
+            //changePage(1);
         }, PAGE_3_TIME_DELAY_MS);
     }
 }

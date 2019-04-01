@@ -23,9 +23,8 @@ var secondWords = [
     "Contacts...", "Private Messages...", "Identity...", "Personal Files...", "Passwords...", "Bank Pin...",
     "Usernames...", "Photos...", "Purchase History...", "Friends List...", "Subscriptions...", "Credit Card Information..."];
 
-var scale = 1.25
-var imgWidth = 187 * scale;
-var imgHeight = 120 * scale;
+var imgWidth = 187 * 1.25;
+var imgHeight = 120 * 1.25;
 
 function drawIcon(ctx) {
     var iconX = 5;
@@ -44,15 +43,18 @@ function drawText(ctx, userIndex) {
     ctx.fillText(userSentences[userIndex], 4 + userLocations[userIndex][0] * imgWidth, 20 + userLocations[userIndex][1] * imgHeight);
 }
 
-function drawImage(ctx, link, userIndex) {
+function getImage(ctx, index) {
     var img = new Image();
     img.onload = function () {
         img.width = imgWidth;
         img.height = imgHeight;
-        ctx.drawImage(img, userLocations[userIndex][0] * imgWidth, userLocations[userIndex][1] * imgHeight, imgWidth, imgHeight);
-        drawText(context, userIndex);
+        ctx.drawImage(img, userLocations[index][0] * imgWidth,
+            userLocations[index][1] * imgHeight,
+            imgWidth,
+            imgHeight);
+        drawText(context, index);
     };
-    img.src = link;
+    return img;
 }
 
 function getUserImageMediaLink(userIndex, imageId) {
@@ -77,7 +79,10 @@ function getManifest() {
     return xhr.responseText;
 }
 
+var newUsers;
+
 function createNewUsersIfInManifest(manifest) {
+    newUsers = [];
     var manifestArr = manifest.split('\n');
     for (var i = 0; i < manifestArr.length; i++) {
         var ud = manifestArr[i].split(',');
@@ -86,9 +91,11 @@ function createNewUsersIfInManifest(manifest) {
             var consentPref = parseInt(ud[1]) == 1;
             console.log("Creating New User: " + userIdInt + ", " + consentPref);
             var u = new User(userIdInt, consentPref);
+            newUsers.push(u);
             currentUsers.set(userIdInt, u);
         }
     }
+    return newUsers;
 }
 
 function addNewUser() {
@@ -107,14 +114,25 @@ function addNewUser() {
     userCount = userCount + 1;
 }
 
+function drawUser(user) {
+    console.log("drawUser");
+    if (user.mediaLinks.length > 0) {
+        images[curImage].src = user.mediaLinks[0];
+    }
+    curImage++;
+    curImage %= userLocations.length;
+}
+
 function handleKeypress(event) {
     if (event.keyCode == '13') {
         toggleFullscreen();
     }
     else {
         var manifestText = getManifest();
-        createNewUsersIfInManifest(manifestText);
-        addNewUser();
+        var nu = createNewUsersIfInManifest(manifestText);
+        for (var i = 0; i < nu.length; i++) {
+            drawUser(nu[i]);
+        }
     }
 }
 
@@ -136,6 +154,8 @@ function toggleFullscreen() {
 }
 
 var currentUsers = new Map();
+var images = [];
+var curImage;
 
 window.addEventListener('DOMContentLoaded', (event) => {
 
@@ -152,10 +172,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
     drawIcon(context);
 
     for (var i = 0; i < userLocations.length; i++) {
-        userSentences.push("");
-        userImageSets.push([]);
-        for (var j = 0; j < imagesPerSet; j++) {
-            userImageSets[i].push(new Image());
-        }
-    };
+        images.push(getImage(context, i));
+    }
 });
