@@ -24,8 +24,8 @@ var IMAGE_DELAY = 1000;
 
 function takeImages() {
     console.log("clicked");
-    userId = Math.floor(Math.random() * 10000); // Set userId before page is changed.
-    imageId = 0;
+    // userId = Math.floor(Math.random() * 10000); // Set userId before page is changed.
+    // imageId = 0;
     let uri = canvas.toDataURL('image/jpeg');
     context.drawImage(video, 0, 0, 640, 480);
     //uploadBlobToCloud(dataURItoBlob(uri));
@@ -34,7 +34,6 @@ function takeImages() {
 // Trigger photo take
 document.getElementById("snap").addEventListener("click", function () {
     setInterval(takeImages, 1000);
-    takeImages();
 });
 
 function dataURItoBlob(dataURI) {
