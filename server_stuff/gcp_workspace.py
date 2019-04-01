@@ -3,10 +3,12 @@ import os
 import cv2
 
 BASE_URL = 'https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/'
+UPLOAD_ENDPOINT = "https://www.googleapis.com/upload/storage/v1/b/gene499-bucket-v2/o"
 min_face_width = 100
 min_face_height = 100
 avg_face_width = 160
 avg_face_height = 160
+
 
 def fetch_blob_through_medialink(url):
     print("FETCHING BLOB: {}".format(url))
@@ -65,7 +67,8 @@ def process_image(filename, did_consent):
         img = cv2.resize(img, orig_size, interpolation=cv2.INTER_NEAREST)
     else:
         faces = face_cascade.detectMultiScale(gray, 1.1, 2)
-        faces = [face for face in faces if face[2] > min_face_width and face[3] > min_face_height]
+        faces = [face for face in faces if face[2] >
+                 min_face_width and face[3] > min_face_height]
         # print(faces)
 
         # if (len(faces) == 0):
@@ -81,13 +84,16 @@ def process_image(filename, did_consent):
         #     # print(faces)
 
         if (len(faces) == 0):
-            face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_alt_tree.xml")
+            face_cascade = cv2.CascadeClassifier(
+                cv2.data.haarcascades + "haarcascade_frontalface_alt_tree.xml")
             faces = face_cascade.detectMultiScale(gray, 1.1, 2)
-            faces = [face for face in faces if face[2] > min_face_width and face[3] > min_face_height]
+            faces = [face for face in faces if face[2] >
+                     min_face_width and face[3] > min_face_height]
             # print(faces)
 
         if (len(faces) == 0):
-            glasses_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_eye_tree_eyeglasses.xml")
+            glasses_cascade = cv2.CascadeClassifier(
+                cv2.data.haarcascades + "haarcascade_eye_tree_eyeglasses.xml")
             glasses = glasses_cascade.detectMultiScale(gray, 1.3, 3)
             # Hail mary
             if (len(glasses) == 2):
@@ -99,7 +105,8 @@ def process_image(filename, did_consent):
                 net_width = x2+w2-x1
                 if (w1 < 90 and w2 < 90 and net_width > min_face_width):
                     access_width = net_width - avg_face_width
-                    faces = [[int(x1 + access_width/2), int(y1-avg_face_width/3), avg_face_width, avg_face_height]]
+                    faces = [
+                        [int(x1 + access_width/2), int(y1-avg_face_width/3), avg_face_width, avg_face_height]]
 
                 for i, glass in enumerate(glasses):
                     (x, y, w, h) = glass
@@ -134,9 +141,9 @@ def process_image(filename, did_consent):
                 top_dist = y
                 bottom_dist = height - y - h
                 if (top_dist > access_height):
-                    img = img[int(access_height):,:]
+                    img = img[int(access_height):, :]
                 elif (bottom_dist > access_height):
-                    img = img[:int(-access_height),:]
+                    img = img[:int(-access_height), :]
                 else:
                     img = img[int(access_height/2):int(-access_height/2), :]
 
@@ -148,12 +155,24 @@ def process_image(filename, did_consent):
 
 def upload_image(binary_data, user_id, image_id):
     file_name = "processed/" + str(user_id) + "/" + str(image_id)
-    upload_endpoint = "https://www.googleapis.com/upload/storage/v1/b/gene499-bucket-v2/o"
     params = {
         'name': file_name,
         'uploadType': "media"
     }
-    r = requests.post(url=upload_endpoint, data=binary_data, params=params)
+    r = requests.post(url=UPLOAD_ENDPOINT, data=binary_data, params=params)
+
+
+def append_processed_manifest(user_id, did_consent):
+    print('Appending User: {} to processed manifest.'.format(user_id))
+    pm = fetch_blob_through_medialink(BASE_URL+'processed_manifest.txt').text
+    if len(pm) != 0:
+        pm += '\n'
+    pm += '{},{}'.format(user_id, did_consent)
+    params = {
+        'name': 'processed_manifest.txt',
+        'uploadType': 'media'
+    }
+    r = requests.post(url=UPLOAD_ENDPOINT, data=pm, params=params)
 
 
 def process(event, context):
@@ -174,6 +193,8 @@ def process(event, context):
         binary_data = convert_to_binary_data(processed_filename)
 
         upload_image(binary_data, user_id, image_id)
+
+    append_processed_manifest(user_id, did_consent)
 
 
 if __name__ == "__main__":
