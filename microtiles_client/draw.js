@@ -52,13 +52,13 @@ function drawText(ctx, userIndex) {
     context.fillStyle = "#FFFFFF";
     ctx.fillText(userSentences[userIndex], 7 + userLocations[userIndex][0] * imgWidth, imgHeight - 8 + userLocations[userIndex][1] * imgHeight);
     var user = allUsers[userIndex];
-    context.font      = "14px Bungee";
+    context.font      = "16px Bungee";
     var userText = "User "+user.userId;
     if (!user.consent) {
         userText = "User ????";
     }
     var textWidth = context.measureText(userText).width;
-    ctx.fillText(userText, imgWidth/2 - textWidth/2 + userLocations[userIndex][0] * imgWidth, 20 + userLocations[userIndex][1] * imgHeight);
+    ctx.fillText(userText, imgWidth/2 - textWidth/2 + userLocations[userIndex][0] * imgWidth, 18 + userLocations[userIndex][1] * imgHeight);
 }
 
 function drawImage(ctx, link, index) {
@@ -86,7 +86,7 @@ function drawImage(ctx, link, index) {
 // }
 
 function getManifest() {
-    var endpoint = "https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/manifest.txt"
+    var endpoint = "https://www.googleapis.com/storage/v1/b/gene499-bucket-v2/o/processed_manifest.txt"
     var xhr = new XMLHttpRequest();
     xhr.open("GET", endpoint, false); // False for synchronous request.
     xhr.send(null);
