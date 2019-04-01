@@ -16,7 +16,11 @@ function changePage(page) {
     } else if (page == 3 || page == 4) {
         document.getElementById("welcome-text").innerHTML = "User " + userId;
         setTimeout(function () {
-            document.location.reload(true)
+            // Reset terms and conditions scrollbar.
+            var x = document.getElementById("style-1");
+            x.scrollTop = 0;
+
+            document.location.reload(true);
             //changePage(1);
         }, PAGE_3_TIME_DELAY_MS);
     }
