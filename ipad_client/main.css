@@ -23,8 +23,8 @@
 }
 
 .icon {
-    max-width: 250px;
-    max-height: 250px;
+    max-width: 400px;
+    max-height: 400px;
     top: 50px;
     font: italic bold 5em/1 Bodoni, serif;
     color: #555;
@@ -32,7 +32,7 @@
     animation: fadeIn 2s infinite alternate;
 
     margin-top: 100px;
-    margin-bottom: 0px;
+    margin-bottom: 150px;
 }
 
 html {
@@ -129,7 +129,7 @@ p1 {
     border: none;
     border-radius: 0.2cm;
     color: #6CA8C0;
-    padding: 10px 32px;
+    padding: 16px 40px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
